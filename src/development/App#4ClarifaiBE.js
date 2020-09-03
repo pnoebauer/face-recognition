@@ -16,8 +16,13 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
-import Particles from 'react-particles-js';
 
+import Particles from 'react-particles-js';
+import Clarifai from 'clarifai';
+
+const app = new Clarifai.App({
+ apiKey: '2b68bbbf227e4e92897cf6a12db1dd68'
+});
 
 //object to store parameters for particles
  const particlesOptions = {
@@ -65,7 +70,7 @@ loadUser = (userData) =>
     joined: userData.joined
     }
   });
-  // console.log(this.state.user,userData);
+  console.log(this.state.user,userData);
 }
 //Test connection with backend - requires cors at backend
 //fetch uses get by default
@@ -104,21 +109,9 @@ loadUser = (userData) =>
   {
     this.setState({imageUrl: this.state.textInput})
     // console.log(this.state);
-
-    // app.models.predict(
-    //   Clarifai.FACE_DETECT_MODEL, 
-    //   this.state.textInput)
-
-    //MULTIPLE .then(response)
-    //THOSE ARE ALL DIFFERENT RESPONSES
-    //RUN TESTS AND GIVE THEM DIFFERENT PARAMETER NAMES - SHOULD GIVE THE SAME RESULT
-    fetch('http://localhost:3000/imageurl', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            input: this.state.textInput})
-          })
-    .then(response => response.json())
+    app.models.predict(
+      Clarifai.FACE_DETECT_MODEL, 
+      this.state.textInput)
     .then(response => 
     {
       if(response)
@@ -137,7 +130,7 @@ loadUser = (userData) =>
         })
         .catch(console.log);
       }  
-      this.displayFaceLocation(this.calculateFaceLocation(response)) //callBack: calcFace run first, and returns box, this return is argument for displayFace
+      this.displayFaceLocation(this.calculateFaceLocation(response)) //callBack: calcFace run first, and returns box, this return is arguments for displayFace
     })
     .catch(err => console.log(err));
   }
