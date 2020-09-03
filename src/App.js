@@ -1,11 +1,5 @@
 //Emmet: auto-close tag --> ctrl-E
-/* Changes:
-        code simplification
-        .catch included
-        clear state (setState(initialState)
-        include a form component to use for SignIn and Register
 
-*/
 import React from 'react';
 import './App.css';
 import 'tachyons';
