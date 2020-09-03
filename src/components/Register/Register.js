@@ -37,7 +37,7 @@ class Register extends React.Component
 	{
 		// console.log(this.state);
 		//Send to the server:
-		fetch('http://localhost:3000/register', {
+		fetch('https://sheltered-sierra-80993.herokuapp.com/register', {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({

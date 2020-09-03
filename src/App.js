@@ -112,7 +112,7 @@ loadUser = (userData) =>
     //MULTIPLE .then(response)
     //THOSE ARE ALL DIFFERENT RESPONSES
     //RUN TESTS AND GIVE THEM DIFFERENT PARAMETER NAMES - SHOULD GIVE THE SAME RESULT
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://sheltered-sierra-80993.herokuapp.com/imageurl', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -125,7 +125,7 @@ loadUser = (userData) =>
       {
         // console.log(this.state.id);
         //increase image count
-        fetch('http://localhost:3000/image', {
+        fetch('https://sheltered-sierra-80993.herokuapp.com/image', {
           method: 'PUT',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({id: this.state.user.id})
