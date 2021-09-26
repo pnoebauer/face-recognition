@@ -1,11 +1,5 @@
 import React from 'react';
 
-/*
-	Convert to class, so it has a state for email and password:
-		const SignIn = ( {onRouteChange} ) => 
-		{
-			return (
-*/
 class SignIn extends React.Component {
 	constructor(props) {
 		super(props);
@@ -15,14 +9,9 @@ class SignIn extends React.Component {
 		};
 	}
 
-	onEmailChange = event => {
-		this.setState({signInEmail: event.target.value});
-		// console.log(event.target.value);
-	};
-
-	onPasswordChange = event => {
-		this.setState({signInPassword: event.target.value});
-		// console.log(event.target.value);
+	handleChange = event => {
+		const {name, value} = event.target;
+		this.setState({[name]: value});
 	};
 
 	onSubmitSignIn = () => {
@@ -62,9 +51,9 @@ class SignIn extends React.Component {
 								<input
 									className='pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100'
 									type='email'
-									name='email-address'
+									name='signInEmail'
 									id='email-address'
-									onChange={this.onEmailChange}
+									onChange={this.handleChange}
 								/>
 							</div>
 							<div className='mv3'>
@@ -74,9 +63,9 @@ class SignIn extends React.Component {
 								<input
 									className='b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100'
 									type='password'
-									name='password'
+									name='signInPassword'
 									id='password'
-									onChange={this.onPasswordChange}
+									onChange={this.handleChange}
 								/>
 							</div>
 						</fieldset>
