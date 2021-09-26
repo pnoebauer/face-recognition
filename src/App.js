@@ -29,7 +29,7 @@ const particlesOptions = {
 const initialState = {
 	textInput: '',
 	imageUrl: '',
-	box: {},
+	boxes: [],
 	route: 'SignIn',
 	isSignedIn: false,
 	user: {
@@ -59,20 +59,28 @@ class App extends React.Component {
 	};
 
 	calculateFaceLocation = dataAPI => {
-		const clarifaiFace = dataAPI.outputs[0].data.regions[0].region_info.bounding_box;
 		const image = document.getElementById('inputImage'); //named in FaceRecognition
 		const width = Number(image.width);
 		const height = Number(image.height);
-		return {
-			leftCol: clarifaiFace.left_col * width,
-			topRow: clarifaiFace.top_row * height,
-			rightCol: width - clarifaiFace.right_col * width,
-			bottomRow: height - clarifaiFace.bottom_row * height,
-		};
+
+		const faceBoxes = dataAPI.outputs[0].data.regions.map(
+			({
+				region_info: {
+					bounding_box: {left_col, top_row, right_col, bottom_row},
+				},
+			}) => ({
+				leftCol: left_col * width,
+				topRow: top_row * height,
+				rightCol: width - right_col * width,
+				bottomRow: height - bottom_row * height,
+			})
+		);
+
+		return faceBoxes;
 	};
 
-	displayFaceLocation = boxCoord => {
-		this.setState({box: boxCoord});
+	displayFaceLocation = boxes => {
+		this.setState({boxes});
 	};
 
 	onInputChange = event => {
@@ -80,7 +88,7 @@ class App extends React.Component {
 	};
 
 	onButtonSubmit = async () => {
-		this.setState({imageUrl: this.state.textInput});
+		this.setState({imageUrl: this.state.textInput, boxes: []});
 
 		try {
 			const res = await fetch('https://sheltered-sierra-80993.herokuapp.com/imageurl', {
@@ -92,8 +100,6 @@ class App extends React.Component {
 			});
 
 			const apiProcessedFaceData = await res.json();
-
-			// console.log({apiProcessedFaceData}, 'click');
 
 			if (apiProcessedFaceData) {
 				this.displayFaceLocation(this.calculateFaceLocation(apiProcessedFaceData)); //callBack: calcFace run first, and returns box, this return is argument for displayFace
@@ -128,20 +134,20 @@ class App extends React.Component {
 	};
 
 	render() {
-		const {isSignedIn, imageUrl, route, box} = this.state;
+		const {isSignedIn, imageUrl, route, boxes} = this.state;
 		return (
 			<div className='App'>
 				<Particles className='particles' params={particlesOptions} />
-				<div>
+				{/* <div>
 					<Logo />
 					<Rank name={this.state.user.name} entries={this.state.user.entries} />
 					<ImageLinkForm
 						onInputChange={this.onInputChange}
 						onSubmit={this.onButtonSubmit}
 					/>
-					<FaceRecognition imageUrl={imageUrl} box={box} />
-				</div>
-				{/* <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
+					<FaceRecognition imageUrl={imageUrl} boxes={boxes} />
+				</div> */}
+				<Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
 				{route === 'Home' ? (
 					<div>
 						<Logo />
@@ -150,13 +156,13 @@ class App extends React.Component {
 							onInputChange={this.onInputChange}
 							onSubmit={this.onButtonSubmit}
 						/>
-						<FaceRecognition imageUrl={imageUrl} box={box} />
+						<FaceRecognition imageUrl={imageUrl} boxes={boxes} />
 					</div>
 				) : this.state.route === 'SignIn' ? (
 					<SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
 				) : (
 					<Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
-				)} */}
+				)}
 			</div>
 		);
 	}
